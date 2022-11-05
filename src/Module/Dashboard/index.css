@@ -1,0 +1,54 @@
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(26, 54, 126, 0.125);
+    border-radius: 0.25rem;
+}
+.border-success {
+    border-color: #3ac47d !important;
+}
+.card-shadow-success {
+    box-shadow: 0 0.46875rem 2.1875rem rgba(58, 196, 125, 0.03), 0 0.9375rem 1.40625rem rgba(58, 196, 125, 0.03), 0 0.25rem 0.53125rem rgba(58, 196, 125, 0.05), 0 0.125rem 0.1875rem rgba(58, 196, 125, 0.03);
+}
+.card-btm-border {
+    border-bottom: transparent solid 4px;
+}
+.card.mb-3 {
+    margin-bottom: 30px !important;
+}
+.fsize-4 {
+    font-size: 2rem !important;
+}
+.widget-chart .widget-subheading {
+    margin: -0.5rem 0 0;
+    display: block;
+    opacity: .6;
+}
+.widget-chart2 .widget-chat-wrapper-outer {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex: 1;
+    flex: 1;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    max-width: 100%;
+}
+.widget-chart {
+    text-align: center;
+    padding: 1rem;
+    position: relative;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    padding: 36px;
+    min-height: 170px;
+    max-height: 170px;
+    box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+}

@@ -1,0 +1,533 @@
+iframe {
+  display: none;
+}
+.logoCenterCss {
+  font-size: 1.6em;
+  color: #7dbb2a;
+  margin-bottom: 33px;
+  width: 100%;
+  text-align: center;
+}
+.colorLogin {
+  color: #a75463;
+}
+
+.bg-fixed-02 {
+  height: 100vh;
+  background: #1b1464;
+}
+.btn-gradient-01,
+.btn-gradient-01 a {
+  background: #1b1464 !important;
+  color: white !important;
+}
+.HeaderText {
+  color: #e5486d;
+  font-size: 1.6em;
+}
+.HeaderTextColor {
+  color: #e5486d;
+}
+
+.sideNavLogo {
+  width: 50px;
+}
+.sideNavComponent {
+  color: #fff !important;
+  padding: 10px 10px !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+.sideNavComponent i {
+  font-size: 1.6rem;
+  margin-right: 10px;
+  transition: none;
+  vertical-align: -4px;
+  color: #fff;
+  float: left;
+}
+.sideNavComponent span {
+  font-size: 1rem;
+  font-weight: 400 !important;
+  margin-top: 4px;
+}
+
+table {
+  border-bottom: 0px !important;
+  border: 1px solid white;
+}
+.table thead tr th {
+  border-bottom: 0px !important;
+  border: 1px solid white;
+}
+
+.dataTables_info,
+.paginate_button {
+  font-family: "Montserrat", sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+  color: #98a8b4 !important;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  background: transparent !important;
+  color: #1b1464 !important;
+  border: 0px !important;
+}
+.fvAeSn {
+  min-width: 150px !important;
+  text-align: center !important;
+}
+.ImageStyle {
+  width: 60px;
+  border-radius: 50%;
+  height: 60px;
+  object-fit: cover;
+}
+.bgBlue {
+  /* background: white; */
+  background: #f7f7f7;
+}
+.hokyBq {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.rdt_TableHeader {
+  display: none !important;
+}
+.rdt_TableCol {
+  color: #5d5386 !important;
+  background: #f2f3f8;
+  font-size: 11pt !important;
+  font-weight: 500 !important;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  border: 1px solid #fff !important;
+}
+.btnExport {
+  background: #5d5386 !important;
+  color: #f2f3f8 !important;
+  padding: 6px 20px !important;
+}
+.previewImage {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-top: 5px;
+  margin-right: 10px;
+}
+.data-table-extensions > .data-table-extensions-filter {
+  float: right !important;
+}
+.data-table-extensions > .data-table-extensions-action {
+  float: left !important;
+}
+
+.data-table-extensions-action .print:before {
+  content: "Print";
+  visibility: visible;
+  /* display: block; */
+  background: #5d5386 !important;
+  color: #f2f3f8 !important;
+  padding: 9px 20px;
+  border-radius: 18px;
+}
+.data-table-extensions-action .download:before {
+  content: "Export";
+  visibility: visible;
+  background: #5d5386 !important;
+  color: #f2f3f8 !important;
+  padding: 9px 20px;
+  border-radius: 18px;
+  margin-left: 45px;
+}
+.data-table-extensions > .data-table-extensions-action > .dropdown {
+  right: -95px !important;
+  background-color: #5c5286 !important;
+  border: 1px solid #8f89a3 !important;
+  margin-top: 8px !important;
+}
+
+.data-table-extensions > .data-table-extensions-action > .dropdown button {
+  color: white !important;
+  background-color: #5c5286;
+  height: 36px !important;
+  border-radius: 28px !important;
+}
+.data-table-extensions
+  > .data-table-extensions-action
+  > .dropdown
+  button:hover {
+  color: white !important;
+  background-color: #5c5286 !important;
+  height: 36px !important;
+  border-radius: 28px !important;
+}
+.fontSmallFornot {
+  font-size: 9pt !important;
+}
+.data-table-extensions > .data-table-extensions-filter > .icon {
+  margin-right: 30px;
+  background-image: none !important;
+  margin-bottom: 0px !important;
+}
+.data-table-extensions > .data-table-extensions-filter > .icon:before {
+  content: "Search:";
+  visibility: visible;
+  color: black !important;
+}
+.data-table-extensions > .data-table-extensions-filter > .filter-text {
+  border: 1px solid lightgray !important;
+  border-radius: 5px;
+}
+.loader {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  z-index: 111111;
+}
+.positionRelative {
+  position: relative;
+}
+.dashboardHeadingColor {
+  font-weight: 500;
+  color: #aea9c3 !important;
+}
+
+.dashboardNumber {
+  font-size: 13pt;
+  font-weight: 400;
+  color: #aea9c3 !important;
+}
+
+/* .editorButton {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+} */
+/* .editorTitle {
+	background-color: #f5f5f6;
+	color: #777;
+	border: 2px solid #777;
+	border-radius: 5px;
+	line-height: 1rem;
+	margin: 20px;
+} */
+.rdw-editor-main {
+  height: 200px;
+}
+
+.withdrawDetails {
+  line-height: 2rem;
+}
+
+.withdrawDetails > label {
+  font-size: 12pt;
+  margin-top: 8px;
+  font-weight: bolder;
+}
+.withdrawDetails > p {
+  font-size: 12pt;
+  margin-top: 8px;
+}
+.withdrawDetailsButton {
+  padding: 5px;
+  background-color: #bd0909;
+  color: white;
+  font-size: 20px;
+  width: 100px;
+  border: none;
+  border-radius: 20px;
+  margin-top: 50px;
+}
+
+#manageUser .data-table-extensions > .data-table-extensions-filter {
+  position: absolute;
+  top: -50px;
+  left: 25px;
+}
+#manageUser .data-table-extensions > .data-table-extensions-action {
+  position: absolute !important;
+  top: -175px;
+  right: 100px;
+  z-index: 111;
+}
+.navbar {
+  height: 70px !important;
+}
+.coverImage {
+  height: 60px;
+  object-fit: cover;
+}
+
+@media (max-width: 1200px) {
+  .default-sidebar > .side-navbar,
+  .compact-sidebar > .side-navbar,
+  .compact-light-sidebar > .side-navbar {
+    margin: 0 !important;
+    min-width: 250px !important;
+    max-width: 250px !important;
+    text-align: left !important;
+  }
+  .hideDIv {
+    display: none !important;
+  }
+}
+.widget-12 i,
+.fa-users {
+  font-size: 2.5rem !important;
+  color: #877fa9;
+}
+.fontBig svg {
+  font-size: 30pt;
+}
+
+.viewButton {
+  font-size: 17pt !important;
+  color: #857f9f;
+}
+
+.minHeight {
+  min-height: 400px;
+}
+#fullImage {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 11111;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  background: #000000c4;
+}
+
+#Closeutton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: white;
+  background: #bb0808;
+  padding: 8px 12px;
+  border-radius: 50%;
+  font-weight: 900;
+}
+
+.logout {
+  font-size: 18pt !important;
+  padding: 7px;
+  background: #1b1464;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+}
+.cursor-pointer{
+  cursor: pointer;
+}
+.textTransform {
+  text-transform: capitalize;
+}
+.PostCard {
+  background: white;
+  padding: 0rem !important;
+  border-radius: 11px;
+  font-size: 12pt;
+  color: gray;
+}
+.postCardPara {
+  font-size: 11pt;
+}
+#viewPost .col-5 {
+  padding-top: 1rem;
+}
+.imageDesign {
+  object-fit: scale-down;
+  height: 270px;
+}
+.imageDesignAudio {
+  object-fit: cover;
+  height: 270px;
+}
+.alignAudioBoxBottom {
+  background: #f0f3f4;
+}
+
+.open {
+  display: block !important;
+  transition: all 0.3s ease-in-out;
+}
+.caretDesing {
+  float: right;
+  margin-top: 13px;
+  margin-right: 13px;
+  color: #aea9c3;
+}
+.active {
+  background-color: transparent;
+}
+
+.btn-grad {
+  background-image: linear-gradient(to right, #1b1465 0%, #3f33bd 100%);
+}
+.btn-grad {
+  margin: 10px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white !important;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  /* display: block; */
+}
+
+.btn-grad:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+.editBtn:hover {
+  padding: 4px;
+  border-radius: 50%;
+  background: #1b1464;
+  color: white;
+}
+
+.deleteBtn:hover {
+  padding: 4px;
+  border-radius: 50%;
+  background: #e23f83d8;
+  color: white;
+}
+#editRestaurantDetails .modal-body,
+#addGoldenHours .modal-body,
+#AddNewRestaurantBankDetails .modal-body,
+#EditNewRestaurantBankDetails .modal-body,
+#EditEarnings .modal-body,
+#editGoldenHours .modal-body,
+#viewNewPopup .modal-body,
+#addDishPrice .modal-body,
+#editDishPrice .modal-body {
+  height: 400px;
+  overflow: scroll;
+}
+.modal-dialog {
+  max-width: 50% !important;
+}
+#previewRegistration .modal-dialog {
+  max-width: 75% !important;
+}
+
+#previewRegistration .modal-body {
+  height: 450px;
+  overflow: scroll;
+}
+.bg-fixed-02 {
+  height: 100vh !important;
+}
+
+.addPopUp {
+  background: rgba(0, 0, 0, 0.26);
+}
+select {
+  height: 38px !important;
+  padding-bottom: 0px !important;
+  padding-top: 5px !important;
+}
+
+.cityButton {
+  min-width: 50px;
+  padding: 10px 10px;
+  border-radius: 26px;
+  background: #e9ecef;
+  margin-right: 6px;
+  margin-top: 6px;
+}
+.expDetailsBox {
+  padding: 2px;
+  border-radius: 10px;
+  border: 1px solid black;
+}
+.expDetailsText {
+  color: black;
+  font-weight: 600;
+}
+.expDetailsRemoveBtn {
+  width: 90px;
+  margin: 2px;
+  height: 35px;
+  color: white;
+  background-color: #1b1464;
+  border-radius: 5px;
+  border: #1b1464;
+  font-size: 16px;
+  font-weight: bold;
+}
+.expDetailsBtn {
+  width: 100px;
+  height: 35px;
+  color: white;
+  background-color: #1b1464;
+  border-radius: 5px;
+  border: #1b1464;
+  font-size: 16px;
+  font-weight: bold;
+}
+.crossButtonPreview {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ff0000b5;
+  text-align: center;
+  color: white;
+  font-weight: 700;
+  right: 0;
+  top: 5px;
+  cursor: pointer;
+}
+
+.default-sidebar > .side-navbar ul ul {
+  background: #312c6d !important;
+}
+
+.autoselect-custom {
+  width: 230px;
+  background: white;
+  max-height: 200px;
+  position: absolute;
+  z-index: 111;
+  overflow: scroll;
+  top: 40px;
+  border: 1px solid lightgray;
+  border-radius: 15px;
+  left: 0;
+}
+.autoselect-custom li {
+  padding: 10px;
+}
+.autoselect-custom li:hover {
+  background-color: lightgray;
+}
+.suggestion-box {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  position: absolute;
+  z-index: 999;
+  background-color: #fff;
+  width: 100%;
+  padding-right: 30px;
+  padding-left: 0px;
+}
+.suggestion {
+  cursor: pointer;
+  display: flex;
+  padding: 4px;
+  border: 1px;
+  border-right: 1px solid rgb(129, 129, 129);
+  border-left: 1px solid rgb(129, 129, 129);
+  border-bottom: 1px solid rgb(129, 129, 129);
+}
+.suggestion:hover {
+  background-color: rgb(235, 231, 231);
+}
