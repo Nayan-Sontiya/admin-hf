@@ -133,6 +133,18 @@ const Registration = () => {
 
   const submitExp = (e) => {
     e.preventDefault();
+
+
+    if (!expDesignation || !expCity || !expPlace) {
+      swal({
+        title: "Error",
+        text: "Please fill experience details",
+        icon: "error",
+        buttons: "Ok",
+      });
+      return false;
+    }
+
     var experiencesDetails = {};
     experiencesDetails.expOutletName = expOutletName;
     experiencesDetails.expDesignation = expDesignation;
@@ -143,10 +155,44 @@ const Registration = () => {
     experiencesDetails.expEndDate =
       expEndMonth !== undefined
         ? expEndMonth === "00"
-          ? new Date().getFullYear() + "-" + new Date().getMonth()
-          : expEndYear + "-" + expEndMonth
+          ? new Date().getMonth() + "-" + new Date().getFullYear()
+          : expEndMonth + "-" + expEndYear
         : "";
-
+console.log("121 ",new Date("01-"+experiencesDetails.expStartDate));
+console.log("122 ",new Date("01-"+experiencesDetails.expEndDate) );
+if(new Date("01-"+experiencesDetails.expStartDate) > new Date()){
+  swal({
+    title: "Error",
+    text: "Start date can not be more than current date",
+    icon: "error",
+    buttons: "Ok",
+  });
+  return false
+}
+if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
+  swal({
+    title: "Error",
+    text: "Start date can not be less than current date ",
+    icon: "error",
+    buttons: "Ok",
+  });
+  return false
+}
+    if (
+      !expStartMonth ||
+      !expStartYear ||
+      !expEndMonth ||
+      (!expEndYear && expEndMonth !== "00")
+    ) {
+      swal({
+        title: "Error",
+        text: "Please select date",
+        icon: "error",
+        buttons: "Ok",
+      });
+      return false;
+    }
+    // return;
     var validityToken = true;
     if (
       expStartMonth !== "" &&
@@ -273,28 +319,41 @@ const Registration = () => {
     [...experiences].forEach((experiencesDetails) => {
       data.append("experiences", JSON.stringify(experiencesDetails));
     });
+    try {
+      let returnValue = await PostRequestFormControl(
+        "registerCandidates",
+        data
+      );
 
-    let returnValue = await PostRequestFormControl("registerCandidates", data);
-    if (returnValue._id !== undefined) {
-      swal({
-        title: "Success",
-        text: "Candidate added successfully!",
-        icon: "success",
-        buttons: true,
-      }).then(function (isConfirm) {
-        if (isConfirm) {
-          history.push("/view-registration");
-        }
-      });
-    } else {
+      if (returnValue._id !== undefined) {
+        swal({
+          title: "Success",
+          text: "Candidate added successfully!",
+          icon: "success",
+          buttons: true,
+        }).then(function (isConfirm) {
+          if (isConfirm) {
+            history.push("/view-registration");
+          }
+        });
+      } else {
+        swal({
+          title: "Error",
+          text: returnValue.message,
+          icon: "error",
+          buttons: "Ok",
+        });
+      }
+    } catch (err) {
       swal({
         title: "Error",
-        text: returnValue.message,
+        text: "Something went wrong",
         icon: "error",
         buttons: "Ok",
       });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   useEffect(() => {
@@ -1670,45 +1729,60 @@ const Registration = () => {
                             <label className="col-sm-4 col-form-label mt-2 text-dark text-md-right">
                               City
                             </label>
-                            <div className="col-sm-7 mt-2 position-relative">
-                              <input
-                                type="text"
-                                value={search}
-                                onChange={(e) => {
-                                  setSearch(e.target.value);
-                                  setSearchTkn(true);
-                                }}
-                                className="form-control"
-                                placeholder="Enter city name"
-                              />
-                              {filterData(City.getCitiesOfCountry("IN"), search)
-                                .length === 0 || search === "" ? (
-                                ""
-                              ) : searchTkn ? (
-                                <ul className="autoselect-custom shadow">
-                                  {City.getCitiesOfCountry("IN") !== undefined
-                                    ? filterData(
-                                        City.getCitiesOfCountry("IN"),
-                                        search
-                                      ).map((cityVal) => {
-                                        return (
-                                          <li
-                                            onClick={() => {
-                                              setExpCity(cityVal.name);
-                                              setSearch(cityVal.name);
-                                              setSearchTkn(false);
-                                            }}
-                                          >
-                                            {cityVal.name}
-                                          </li>
-                                        );
-                                      })
-                                    : ""}
-                                </ul>
-                              ) : (
-                                ""
-                              )}
-                            </div>
+                            {expPlace==="INDIA" ? (
+                              <div className="col-sm-7 mt-2 position-relative">
+                                <input
+                                  type="text"
+                                  value={search}
+                                  onChange={(e) => {
+                                    setSearch(e.target.value);
+                                    setSearchTkn(true);
+                                  }}
+                                  className="form-control"
+                                  placeholder="Enter city name"
+                                />
+                                {filterData(
+                                  City.getCitiesOfCountry("IN"),
+                                  search
+                                ).length === 0 || search === "" ? (
+                                  ""
+                                ) : searchTkn ? (
+                                  <ul className="autoselect-custom shadow">
+                                    {City.getCitiesOfCountry("IN") !== undefined
+                                      ? filterData(
+                                          City.getCitiesOfCountry("IN"),
+                                          search
+                                        ).map((cityVal) => {
+                                          return (
+                                            <li
+                                              onClick={() => {
+                                                setExpCity(cityVal.name);
+                                                setSearch(cityVal.name);
+                                                setSearchTkn(false);
+                                              }}
+                                            >
+                                              {cityVal.name}
+                                            </li>
+                                          );
+                                        })
+                                      : ""}
+                                  </ul>
+                                ) : (
+                                  ""
+                                )}
+                              </div>
+                            ) : (
+                              <div className="col-sm-7 mt-2">
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  value={expCity}
+                                  onChange={(e) => setExpCity(e.target.value)}
+                                  placeholder="Enter your city"
+                                />
+                              </div>
+                            )}
+
                             <label className="col-sm-4 col-form-label mt-2 text-dark text-md-right">
                               Start date
                             </label>
@@ -2258,7 +2332,7 @@ const Registration = () => {
                               <label className=""> Experience :</label>
                             </div>
                             <div className="col-7 p-0 m-0">
-                              <p className="pl-2 ">{experience}</p>
+                              <p className="pl-2 ">{experience} months</p>
                             </div>
                           </div>
                           <div className="row p-0 m-0">
@@ -2416,7 +2490,7 @@ const Registration = () => {
                         </div>
                       </div>
                     }
-                    SubmitButton={() => registration()}
+                    SubmitButton={registration}
                     ModalType="registration"
                     buttonStatus={loading}
                   />

@@ -73,7 +73,30 @@ function Modal({
                 >
                   Close
                 </button>
-                {SubmitButton !== "" ? (
+                {SubmitButton !== "" ?
+                ModalType==="registration"?(
+                  <>
+                    {buttonStatus === true ? (
+                      <Loader/>
+                    ) : (
+                      <button className="btn btn-grad" onClick={SubmitButton}>
+                        Register
+                      </button>
+                    )}
+                  </>
+                ):
+                ModalType==="update"?(
+                  <>
+                    {buttonStatus === true ? (
+                      <Loader/>
+                    ) : (
+                      <button className="btn btn-grad" onClick={SubmitButton}>
+                        Update
+                      </button>
+                    )}
+                  </>
+                ):
+               (
                   <>
                     {buttonStatus === true ? (
                       <Loader />

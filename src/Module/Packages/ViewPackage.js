@@ -196,6 +196,7 @@ const ManagePackage = () => {
                                                 </div>
                                             </div>
                                         }
+                                        ModalType="update"
                                         SubmitButton={updatePlan}
                                     />
                                 </div>

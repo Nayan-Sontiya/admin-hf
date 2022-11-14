@@ -26,10 +26,10 @@ function Login({ setAuthToken }) {
     let returnValue = await loginPostRequest("adminLogin", item);
 
     if (returnValue.accessToken) {
-      // let otpResponse = await GetRequest("getOtp");
-      let otpResponse = {
-        status:200
-      }
+      let otpResponse = await GetRequest("getOtp");
+      // let otpResponse = {
+      //   status:200
+      // }
       if (otpResponse?.status !== 200) {
         swal({
           title: "Error",
@@ -38,15 +38,15 @@ function Login({ setAuthToken }) {
           button: "Ok",
         });
       } else {
-        let sessionObj = {
-          status: "Active",
-          userData: returnValue,
-          expiry: new Date().getTime() + 3600000 * 10, // (10 hr)
-        };
-        localStorage.setItem("hospitality", JSON.stringify(sessionObj));
-        setAuthToken(true);
-        history.push("/view-registration");
-        return;
+        // let sessionObj = {
+        //   status: "Active",
+        //   userData: returnValue,
+        //   expiry: new Date().getTime() + 3600000 * 10, // (10 hr)
+        // };
+        // localStorage.setItem("hospitality", JSON.stringify(sessionObj));
+        // setAuthToken(true);
+        // history.push("/view-registration");
+        // return;
         setUserData(returnValue);
         const { otp_id, check } = otpResponse.data;
         setOtpId(otp_id);
