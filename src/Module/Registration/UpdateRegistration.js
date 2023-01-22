@@ -10,11 +10,15 @@ import {
 import { useHistory, useLocation } from "react-router-dom";
 import swal from "sweetalert";
 import Modal from "../Common/Modal";
+import { City } from "country-state-city";
 const UpdateRegistration = () => {
+  const [search, setSearch] = useState("");
+  const [searchTkn, setSearchTkn] = useState(false);
   let currentDate = new Date().toISOString().split("T")[0];
   let history = useHistory();
   let urlData = useLocation();
   const [userData, setUserData] = useState();
+  // const [loading,setLoading]
   let [categoryData, setCategoryData] = useState([]);
   let [categoryId, setCategoryId] = useState("");
   // let [occupationId, setOccupationId] = useState("");
@@ -33,6 +37,7 @@ const UpdateRegistration = () => {
   let [pan_card_no, setPan_card_no] = useState("");
   let [identification, setIdentification] = useState("");
   let [passportNo, setPassportNo] = useState("");
+  let [video, setVideo] = useState("");
   let [date_of_expiry, setDate_of_expiry] = useState("");
   let [email_address, setEmail_address] = useState("");
   let [relative_contact_no, setRelative_contact_no] = useState("");
@@ -61,6 +66,7 @@ const UpdateRegistration = () => {
   let [expEndYear, setExpEndYear] = useState("");
   let [expEndDate, setExpEndDate] = useState("");
   let [experiences, setExperiences] = useState([]);
+  const [videoProfile, setVideoPreview] = useState([]);
   const [mediaForPreviewApp, setMediaForPreviewApp] = useState([]);
   const [profilePreview, setProfilePreview] = useState([]);
   const [certificatePreview, setCertificatePreview] = useState([]);
@@ -74,7 +80,11 @@ const UpdateRegistration = () => {
   const [candidateId, setCandidateId] = useState("");
   let [loading, setLoading] = useState(false);
   let [experienceUnsorted, setExperienceUnsorted] = useState([]);
-
+  const filterData = (searchedData, search) => {
+    return searchedData?.filter(
+      (el) => el.name?.toLowerCase().indexOf(search?.toLowerCase()) !== -1
+    );
+  };
   useEffect(() => {
     if (urlData.state !== undefined) {
       setCandidateId(urlData.state.id);
@@ -85,14 +95,44 @@ const UpdateRegistration = () => {
       setCandidateId(JSON.parse(localStorage.getItem("singleRegId")).id);
     }
   }, [urlData]);
-
+  function UploadProfileVideo(file) {
+    if (file) {
+      setVideo((prev) => [...prev, file]);
+      readAndPreviewVideo(file);
+    }
+  }
+  const renderVideoMedia = (source) => {
+    return source.map((media, index) => {
+      return (
+        <video
+          alt="Exclusive photo platform"
+          src={media}
+          key={index}
+          controls
+          className="previewImage"
+        />
+      );
+    });
+  };
+  const ProfileVideoHandleChange = () => {
+    document.getElementById("profileVideoInput").click();
+  };
+  function readAndPreviewVideo(files) {
+    if (files) {
+      const fileArray = Array.from(files).map((file) =>
+        URL.createObjectURL(file)
+      );
+      setVideoPreview((prevVideos) => prevVideos.concat(fileArray));
+      Array.from(files).map((file) => URL.revokeObjectURL(file));
+    }
+  }
   async function fetchPosts(id) {
     let res = await GetRequest("getCandidateInfo/" + id);
     if (res.status === 200) {
       setUserData(res.data);
     }
   }
-
+  // console.log("userData => ", userData);
   useEffect(() => {
     if (userData !== undefined) {
       setName_of_candidate(userData.name_of_candidate);
@@ -126,24 +166,42 @@ const UpdateRegistration = () => {
       setSub_category([userData.sub_category]);
     }
   }, [userData]);
+  function UploadProfileVideo(file) {
+    if (file) {
+      setVideo((prev) => [...prev, file]);
+      readAndPreviewVideo(file);
+    }
+  }
   useEffect(() => {
-    experienceFormator();
-  }, [experiences]);
-  const experienceFormator = () => {
-    if (experienceUnsorted.length !== 0) {
-      let formatedDate = experienceUnsorted.map((exp) => {
+    if (userData?.experiences?.length !== 0) {
+      let formatedDate = userData?.experiences.map((exp) => {
         let year = exp.expStartDate.split("-")[1];
         let month = exp.expStartDate.split("-")[0];
         let properDateFormate = year + "-" + month + "-01";
         exp.formatedStartDate = new Date(properDateFormate);
         return exp;
       });
-      let formated = formatedDate.sort(
+      let formated = formatedDate?.sort(
         (a, b) => b.formatedStartDate - a.formatedStartDate
       );
       setExperiences(formated);
     }
-  };
+  }, [userData?.experiences]);
+  // const experienceFormator = () => {
+  //   if (experienceUnsorted.length !== 0) {
+  //     let formatedDate = experienceUnsorted.map((exp) => {
+  //       let year = exp.expStartDate.split("-")[1];
+  //       let month = exp.expStartDate.split("-")[0];
+  //       let properDateFormate = year + "-" + month + "-01";
+  //       exp.formatedStartDate = new Date(properDateFormate);
+  //       return exp;
+  //     });
+  //     let formated = formatedDate.sort(
+  //       (a, b) => b.formatedStartDate - a.formatedStartDate
+  //     );
+  //     setExperiences(formated);
+  //   }
+  // };
   useEffect(() => {
     var currentYear = new Date().getFullYear();
     var ddYears = document.getElementById("ddYears");
@@ -172,13 +230,12 @@ const UpdateRegistration = () => {
     setExpDesignation(expDetailsData.expDesignation);
     setExpPlace(expDetailsData.expPlace);
     setExpCity(expDetailsData.expCity);
-
     setExpStartDate(expDetailsData.expStartDate);
     setExpEndDate(expDetailsData.expEndDate);
-    setExpStartMonth(expDetailsData.expStartMonth);
-    setExpStartYear(expDetailsData.expStartYear);
-    setExpEndMonth(expDetailsData.expEndMonth);
-    setExpEndYear(expDetailsData.expEndYear);
+    setExpStartMonth(expDetailsData?.expStartDate?.split("-")[0]);
+    setExpStartYear(expDetailsData?.expStartDate?.split("-")[1]);
+    setExpEndMonth(expDetailsData?.expEndDate?.split("-")[0]);
+    setExpEndYear(expDetailsData?.expEndDate?.split("-")[1]);
   }, [expDetailsData]);
   useEffect(() => {
     if (expPlace === "INDIA") {
@@ -190,6 +247,15 @@ const UpdateRegistration = () => {
 
   const submitExp = (e) => {
     e.preventDefault();
+    if (!expDesignation || !expCity || !expPlace) {
+      swal({
+        title: "Error",
+        text: "Please fill experience details",
+        icon: "error",
+        buttons: "Ok",
+      });
+      return false;
+    }
     var experiencesDetails = {};
 
     experiencesDetails.expOutletName = expOutletName;
@@ -199,8 +265,44 @@ const UpdateRegistration = () => {
     experiencesDetails.expStartDate =
       expStartMonth !== undefined ? expStartMonth + "-" + expStartYear : "";
     experiencesDetails.expEndDate =
-      expEndMonth !== undefined ? expEndMonth + "-" + expEndYear : "";
-
+      expEndMonth !== undefined
+        ? expEndMonth === "00"
+          ? new Date().getMonth() + "-" + new Date().getFullYear()
+          : expEndMonth + "-" + expEndYear
+        : "";
+    if (new Date("01-" + experiencesDetails.expStartDate) > new Date()) {
+      swal({
+        title: "Error",
+        text: "Start date can not be more than current date",
+        icon: "error",
+        buttons: "Ok",
+      });
+      return false;
+    }
+    if (new Date("01-" + experiencesDetails.expEndDate) > new Date()) {
+      swal({
+        title: "Error",
+        text: "Start date can not be less than current date ",
+        icon: "error",
+        buttons: "Ok",
+      });
+      return false;
+    }
+    if (
+      !expStartMonth ||
+      !expStartYear ||
+      !expEndMonth ||
+      (!expEndYear && expEndMonth !== "00")
+    ) {
+      swal({
+        title: "Error",
+        text: "Please select date",
+        icon: "error",
+        buttons: "Ok",
+      });
+      return false;
+    }
+    var validityToken = true;
     if (
       expStartMonth !== "" &&
       expStartYear !== "" &&
@@ -211,15 +313,18 @@ const UpdateRegistration = () => {
       expEndMonth !== undefined &&
       expEndYear !== undefined
     ) {
-      monthDiff(
+      validityToken = monthDiff(
         expStartYear + "-" + expStartMonth,
-        expEndYear + "-" + expEndMonth
+        expEndMonth === "00"
+          ? new Date().getFullYear() + "-" + new Date().getMonth()
+          : expEndYear + "-" + expEndMonth
       );
     } else {
-      monthDiff("", "");
+      validityToken = monthDiff("", "");
     }
-
-    setExperiences((prev) => [...prev, experiencesDetails]);
+    if (validityToken === true) {
+      setExperiences((prev) => [...prev, experiencesDetails]);
+    }
 
     setExpOutletName("");
     setExpDesignation("");
@@ -232,7 +337,57 @@ const UpdateRegistration = () => {
     setExpEndYear("");
     setExpEndDate("");
   };
-
+  useEffect(() => {
+    if (name_of_candidate) {
+      document.getElementById("name").style.border = "";
+    }
+    if (dob) {
+      document.getElementById("dob").style.border = "";
+    }
+    if (age) {
+      document.getElementById("age").style.border = "";
+    }
+    if (languages) {
+      document.getElementById("languages").style.border = "";
+    }
+    if (category?.length) {
+      document.getElementById("Category").style.border = "";
+    }
+    // if (sub_category) {
+    //   document.getElementById("subCategory").style.border = "";
+    // }
+    if (permanent_address) {
+      document.getElementById("permanentAddress").style.border = "";
+    }
+    if (contactno1) {
+      document.getElementById("contact1").style.border = "";
+    }
+    if (relative_contact_no) {
+      document.getElementById("relativePhone").style.border = "";
+    }
+    if (education) {
+      document.getElementById("education").style.border = "";
+    }
+    if (religion) {
+      document.getElementById("religion").style.border = "";
+    }
+    if (marital_status) {
+      document.getElementById("maritalStatue").style.border = "";
+    }
+  }, [
+    marital_status,
+    religion,
+    education,
+    relative_contact_no,
+    contactno1,
+    name_of_candidate,
+    dob,
+    age,
+    languages,
+    category,
+    sub_category,
+    permanent_address,
+  ]);
   function monthDiff(date1, date2) {
     if (date1 !== "" || date2 !== "") {
       const d1 = new Date(date1);
@@ -242,10 +397,22 @@ const UpdateRegistration = () => {
       months -= d1.getMonth();
       months += d2.getMonth();
       let finalMonth = months <= 0 ? 0 : months;
-      setExperience((prev) => prev + finalMonth);
+      if (finalMonth <= 0) {
+        swal({
+          title: "Error",
+          text: "End Date Can Not Be Smaller Then Start Date",
+          icon: "error",
+          buttons: "Ok",
+        });
+        return false;
+      } else {
+        setExperience((prev) => prev + finalMonth);
+        return true;
+      }
     } else {
       let n = 0;
       setExperience((prev) => prev + n);
+      return true;
     }
   }
 
@@ -564,25 +731,46 @@ const UpdateRegistration = () => {
         });
       }
     } else {
-      if (age >= 18) {
-        if (emailFormateValidation(email_address) === true) {
-          displayModal("previewRegistration");
-          // registration();
+      if (contactno1?.length > 10 || contactno1?.length < 10) {
+        document.getElementById("contact1").style.border = "1px solid red";
+        swal({
+          title: "",
+          text: "Please enter valid contact number",
+          icon: "info",
+          buttons: "Ok",
+        });
+      } else if (
+        relative_contact_no?.length > 10 ||
+        relative_contact_no?.length < 10
+      ) {
+        document.getElementById("relativePhone").style.border = "1px solid red";
+        swal({
+          title: "",
+          text: "Please enter valid contact number",
+          icon: "info",
+          buttons: "Ok",
+        });
+      } else {
+        if (age >= 18) {
+          if (emailFormateValidation(email_address) === true) {
+            displayModal("previewRegistration");
+            // registration();
+          } else {
+            swal({
+              title: "",
+              text: "Email is invalid!",
+              icon: "error",
+              buttons: "Ok",
+            });
+          }
         } else {
           swal({
-            title: "",
-            text: "Email is invalid!",
-            icon: "error",
+            title: "Error",
+            text: "Candidate's age can not be less then 18 years!",
+            icon: "Error",
             buttons: "Ok",
           });
         }
-      } else {
-        swal({
-          title: "Error",
-          text: "Candidate's age can not be less then 18 years!",
-          icon: "Error",
-          buttons: "Ok",
-        });
       }
     }
   };
@@ -652,7 +840,7 @@ const UpdateRegistration = () => {
   }
 
   const renderMedia = (source) => {
-    if (source.length > 0) {
+    if (source?.length > 0) {
       return source.map((media, index) => {
         return (
           <img
@@ -869,6 +1057,7 @@ const UpdateRegistration = () => {
                                 name="gender"
                                 value="Male"
                                 tabIndex="1"
+                                checked={gender === "Male"}
                                 onChange={(e) => setGender(e.target.value)}
                               />
                               <label className=" mr-4 mt-1 expDetailsText">
@@ -882,6 +1071,7 @@ const UpdateRegistration = () => {
                                 name="gender"
                                 value="Female"
                                 tabIndex="2"
+                                checked={gender === "Female"}
                                 onChange={(e) => setGender(e.target.value)}
                               />
                               <label className=" mr-4 mt-1 expDetailsText">
@@ -895,6 +1085,7 @@ const UpdateRegistration = () => {
                                 name="gender"
                                 value="Other"
                                 tabIndex="3"
+                                checked={gender === "Other"}
                                 onChange={(e) => setGender(e.target.value)}
                               />
                               <label className=" mr-4 mt-1 expDetailsText">
@@ -1159,7 +1350,35 @@ const UpdateRegistration = () => {
                             </div>
                           </div>
                         </div>
-
+                        <div className="form-group row mt-4">
+                          <label className="col-sm-4 col-form-label text-dark text-md-right">
+                            Candidate Video
+                          </label>
+                          <div className="col-sm-7">
+                            <div className="row p-0 m-0">
+                              <input
+                                className="form-control mt-1 w-50"
+                                multiple
+                                accept="video/mp4,video/x-m4v,video/*"
+                                type="file"
+                                id="profileVideoInput"
+                                // value={selectImage.name}
+                                onChange={(e) => {
+                                  UploadProfileVideo(e.target.files);
+                                }}
+                              />
+                              <button
+                                onClick={ProfileVideoHandleChange}
+                                className="ml-5 expDetailsBtn"
+                              >
+                                Add more
+                              </button>
+                            </div>
+                            <div id="preview">
+                              {renderVideoMedia(videoProfile)}
+                            </div>
+                          </div>
+                        </div>
                         <div className="form-group row mt-4">
                           <label className="col-sm-4 col-form-label text-dark text-md-right">
                             Objective
@@ -1175,14 +1394,14 @@ const UpdateRegistration = () => {
                           </div>
                         </div>
 
-                        {experiences.length > 0 ? (
+                        {experiences?.length > 0 ? (
                           <div className="form-group row mt-4">
                             <label className="col-sm-2 col-form-label text-dark text-md-right"></label>
                             <div className="col-sm-9 border pb-4 pt-3">
                               <p className="font-weight-bold">
                                 Experience Details
                               </p>
-                              {experiences.length > 0
+                              {experiences?.length > 0
                                 ? experiences.map((value, i) => {
                                     return (
                                       <div
@@ -1269,7 +1488,7 @@ const UpdateRegistration = () => {
                         ) : (
                           ""
                         )}
-                        <div className="form-group row mt-4">
+                        {/* <div className="form-group row mt-4">
                           <label className="col-sm-4 col-form-label text-dark text-md-right">
                             Work Experience Details
                           </label>
@@ -1432,15 +1651,227 @@ const UpdateRegistration = () => {
                               </button>
                             </div>
                           </div>
+                        </div> */}
+                        <div className="form-group row mt-4">
+                          <label className="col-sm-4 col-form-label text-dark text-md-right">
+                            Work Experience Details
+                          </label>
+                          <div className="col-sm-7 row p-0 m-0">
+                            <label className="col-sm-4 col-form-label mt-2 text-dark text-md-right">
+                              Place
+                            </label>
+                            <div className="col-sm-7 mt-2">
+                              <select
+                                className="form-control"
+                                value={expPlace}
+                                onChange={(e) => setExpPlace(e.target.value)}
+                              >
+                                <option selected>Select place</option>
+                                <option value="INDIA">INDIA</option>
+                                <option value="ABROAD">ABROAD</option>
+                              </select>
+                            </div>
+                            <label className="col-sm-4 mt-2 col-form-label text-dark text-md-right">
+                              Outlet Name
+                            </label>
+                            <div className="col-sm-7 mt-2">
+                              <input
+                                type="text"
+                                className="form-control"
+                                value={expOutletName}
+                                onChange={(e) =>
+                                  setExpOutletName(e.target.value)
+                                }
+                                placeholder="Outlet Name"
+                              />
+                            </div>
+
+                            <label className="col-sm-4 col-form-label mt-2 text-dark text-md-right">
+                              Designation
+                            </label>
+                            <div className="col-sm-7 mt-2">
+                              <input
+                                type="text"
+                                className="form-control"
+                                value={expDesignation}
+                                onChange={(e) =>
+                                  setExpDesignation(e.target.value)
+                                }
+                                placeholder="Enter your designation"
+                              />
+                            </div>
+
+                            <label className="col-sm-4 col-form-label mt-2 text-dark text-md-right">
+                              City
+                            </label>
+                            {expPlace === "INDIA" ? (
+                              <div className="col-sm-7 mt-2 position-relative">
+                                <input
+                                  type="text"
+                                  value={expCity}
+                                  onChange={(e) => {
+                                    setSearch(e.target.value);
+                                    setSearchTkn(true);
+                                  }}
+                                  className="form-control"
+                                  placeholder="Enter city name"
+                                />
+                                {filterData(
+                                  City.getCitiesOfCountry("IN"),
+                                  search
+                                ).length === 0 || search === "" ? (
+                                  ""
+                                ) : searchTkn ? (
+                                  <ul className="autoselect-custom shadow">
+                                    {City.getCitiesOfCountry("IN") !== undefined
+                                      ? filterData(
+                                          City.getCitiesOfCountry("IN"),
+                                          search
+                                        ).map((cityVal) => {
+                                          return (
+                                            <li
+                                              onClick={() => {
+                                                setExpCity(cityVal.name);
+                                                setSearch(cityVal.name);
+                                                setSearchTkn(false);
+                                              }}
+                                            >
+                                              {cityVal.name}
+                                            </li>
+                                          );
+                                        })
+                                      : ""}
+                                  </ul>
+                                ) : (
+                                  ""
+                                )}
+                              </div>
+                            ) : (
+                              <div className="col-sm-7 mt-2">
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  value={expCity}
+                                  onChange={(e) => setExpCity(e.target.value)}
+                                  placeholder="Enter your city"
+                                />
+                              </div>
+                            )}
+
+                            <label className="col-sm-4 col-form-label mt-2 text-dark text-md-right">
+                              Start date
+                            </label>
+                            <div className="col-sm-7 mt-2 row m-0 ">
+                              <div style={{ width: "50%" }}>
+                                <select
+                                  value={expStartMonth}
+                                  onChange={(e) =>
+                                    setExpStartMonth(e.target.value)
+                                  }
+                                  className="form-control"
+                                >
+                                  <option disabled selected value="">
+                                    Select month
+                                  </option>
+                                  <option value="01">January</option>
+                                  <option value="02">February</option>
+                                  <option value="03">March</option>
+                                  <option value="04">April</option>
+                                  <option value="05">May</option>
+                                  <option value="06">June</option>
+                                  <option value="07">July</option>
+                                  <option value="08">August</option>
+                                  <option value="09">September</option>
+                                  <option value="10">October</option>
+                                  <option value="11">November</option>
+                                  <option value="12">December</option>
+                                </select>
+                              </div>
+                              <div
+                                style={{ width: "50%", paddingLeft: "10px" }}
+                              >
+                                <select
+                                  id="ddlYears"
+                                  value={expStartYear}
+                                  onChange={(e) =>
+                                    setExpStartYear(e.target.value)
+                                  }
+                                  className="form-control"
+                                >
+                                  <option value="" disabled selected>
+                                    Select year
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                            <label className="col-sm-4 col-form-label mt-2 text-dark text-md-right">
+                              End date
+                            </label>
+                            <div className="col-sm-7 row mt-2 m-0">
+                              <div style={{ width: "50%" }}>
+                                <select
+                                  value={expEndMonth}
+                                  onChange={(e) =>
+                                    setExpEndMonth(e.target.value)
+                                  }
+                                  className="form-control"
+                                >
+                                  <option disabled selected value="">
+                                    Select month
+                                  </option>
+                                  <option value="00">
+                                    Currently Working Here
+                                  </option>
+                                  <option value="01">January</option>
+                                  <option value="02">February</option>
+                                  <option value="03">March</option>
+                                  <option value="04">April</option>
+                                  <option value="05">May</option>
+                                  <option value="06">June</option>
+                                  <option value="07">July</option>
+                                  <option value="08">August</option>
+                                  <option value="09">September</option>
+                                  <option value="10">October</option>
+                                  <option value="11">November</option>
+                                  <option value="12">December</option>
+                                </select>
+                              </div>
+                              <div
+                                style={{ width: "50%", paddingLeft: "10px" }}
+                              >
+                                <select
+                                  id="ddYears"
+                                  value={expEndYear}
+                                  onChange={(e) =>
+                                    setExpEndYear(e.target.value)
+                                  }
+                                  disabled={expEndMonth === "00" ? true : false}
+                                  className="form-control"
+                                >
+                                  <option value="" disabled selected>
+                                    Select year
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="col-md-12 text-center pt-3">
+                              <button
+                                onClick={submitExp}
+                                className="expDetailsBtn"
+                              >
+                                Add
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                        {category.length > 0 ? (
+                        {category?.length > 0 ? (
                           <div className="form-group row mt-4">
                             <label className="col-sm-4 col-form-label text-dark text-md-right"></label>
                             <div className="col-sm-7 border pb-4 pt-3">
                               <p className="font-weight-bold">
                                 Selected Category
                               </p>
-                              {category.length > 0
+                              {category?.length > 0
                                 ? category.map((value) => {
                                     return (
                                       <span className="position-relative">
@@ -1464,7 +1895,7 @@ const UpdateRegistration = () => {
                         ) : (
                           ""
                         )}
-                        {category.length > 0 ? (
+                        {category?.length > 0 ? (
                           <>
                             <div className="form-group row p-0 m-0">
                               <label className="col-sm-4 col-form-label text-dark text-md-right"></label>
@@ -1491,7 +1922,7 @@ const UpdateRegistration = () => {
                                 );
                               }}
                             >
-                              {categoryData.length !== 0 ? (
+                              {categoryData?.length !== 0 ? (
                                 <option disabled selected>
                                   Select Category
                                 </option>
@@ -1499,7 +1930,7 @@ const UpdateRegistration = () => {
                                 ""
                               )}
 
-                              {categoryData.length !== 0 ? (
+                              {categoryData?.length !== 0 ? (
                                 categoryData.map((categoryVal, i) => {
                                   return (
                                     <option value={categoryVal._id}>
@@ -1558,6 +1989,7 @@ const UpdateRegistration = () => {
                                   .replace(/(\..*?)\..*/g, "$1"))
                               }
                               className="form-control"
+                              value={salaryExpectation}
                               onChange={(e) =>
                                 setSalaryExpectation(e.target.value)
                               }
@@ -1746,6 +2178,14 @@ const UpdateRegistration = () => {
                           </div>
                           <div className="row p-0 m-0">
                             <div className="col-5 p-0 m-0 text-right">
+                              <label className=""> Employement type :</label>
+                            </div>
+                            <div className="col-7 p-0 m-0">
+                              <p className="pl-2 ">{type_of_employement}</p>
+                            </div>
+                          </div>
+                          <div className="row p-0 m-0">
+                            <div className="col-5 p-0 m-0 text-right">
                               <label className=""> Salary Expectation :</label>
                             </div>
                             <div className="col-7 p-0 m-0">
@@ -1754,7 +2194,14 @@ const UpdateRegistration = () => {
                               </p>
                             </div>
                           </div>
-
+                          <div className="row p-0 m-0">
+                            <div className="col-5 p-0 m-0 text-right">
+                              <label className=""> Experience :</label>
+                            </div>
+                            <div className="col-7 p-0 m-0">
+                              <p className="pl-2 ">{experience} months</p>
+                            </div>
+                          </div>
                           <div className="row p-0 m-0">
                             <div className="col-5 p-0 m-0 text-right">
                               <label className=""> Education :</label>
@@ -1790,6 +2237,15 @@ const UpdateRegistration = () => {
                           </div>
                           <div className="row p-0 m-0">
                             <div className="col-5 p-0 m-0 text-right">
+                              <label className="">Category :</label>
+                            </div>
+
+                            <div className="col-7 p-0 m-0">
+                              <p className="pl-2 ">{category.toString()}</p>
+                            </div>
+                          </div>
+                          <div className="row p-0 m-0">
+                            <div className="col-5 p-0 m-0 text-right">
                               <label className=""> Sub Category :</label>
                             </div>
 
@@ -1804,7 +2260,7 @@ const UpdateRegistration = () => {
                           <label className="expDetailsText">
                             Work Experience
                           </label>
-                          {experiences.length > 0
+                          {experiences?.length > 0
                             ? experiences.map((value, i) => {
                                 return (
                                   <div
@@ -1875,30 +2331,46 @@ const UpdateRegistration = () => {
                                 );
                               })
                             : ""}
-                          <div className="pt-3 pb-3">
-                            <label className="expDetailsText">
-                              Candidate Photograph
-                            </label>
-                            <div id="preview">
-                              {renderMedia(profilePreview)}
+                          {!!profilePreview?.length && (
+                            <div className="pt-3 pb-3">
+                              <label className="expDetailsText">
+                                Candidate Photograph
+                              </label>
+                              <div id="preview">
+                                {renderMedia(profilePreview)}
+                              </div>
                             </div>
-                          </div>
-                          <div className="pt-3 pb-3">
-                            <label className="expDetailsText">
-                              Candidate Certificate
-                            </label>
-                            <div id="preview">
-                              {renderMedia(certificatePreview)}
+                          )}
+                          {!!videoProfile?.length && (
+                            <div className="pt-3 pb-3">
+                              <label className="expDetailsText">
+                                Candidate Video
+                              </label>
+                              <div id="preview">
+                                {renderVideoMedia(videoProfile)}
+                              </div>
                             </div>
-                          </div>{" "}
-                          <div className="pt-3 pb-3">
-                            <label className="expDetailsText">
-                              Dish Photos
-                            </label>
-                            <div id="preview">
-                              {renderMedia(mediaForPreviewApp)}
+                          )}
+                          {!!certificatePreview?.length && (
+                            <div className="pt-3 pb-3">
+                              <label className="expDetailsText">
+                                Candidate Certificate
+                              </label>
+                              <div id="preview">
+                                {renderMedia(certificatePreview)}
+                              </div>
                             </div>
-                          </div>
+                          )}
+                          {!!mediaForPreviewApp?.length && (
+                            <div className="pt-3 pb-3">
+                              <label className="expDetailsText">
+                                Dish Photos
+                              </label>
+                              <div id="preview">
+                                {renderMedia(mediaForPreviewApp)}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     }

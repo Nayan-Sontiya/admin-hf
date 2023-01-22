@@ -28,8 +28,8 @@ function Login({ setAuthToken }) {
     if (returnValue.accessToken) {
       let otpResponse = await GetRequest("getOtp");
       // let otpResponse = {
-      //   status:200
-      // }
+      //   status: 200,
+      // };
       if (otpResponse?.status !== 200) {
         swal({
           title: "Error",

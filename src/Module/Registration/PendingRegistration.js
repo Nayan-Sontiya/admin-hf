@@ -20,7 +20,7 @@ function PendingRegistration() {
     async function fetchPosts() {
       setLoading(true);
       let res = await GetRequest("getPendingCandidate");
-      console.log(res);
+  
       if (res.status === 200) {
         setData(res.data);
       } else {
@@ -123,7 +123,7 @@ function PendingRegistration() {
                     <div style={{ display: "none" }}></div>
                   )}
 
-                  <DataTableComponent columns={columns} data={data} />
+                  <DataTableComponent columns={columns} data={data} filterPlaceholder={''}/>
           
                 </div>
               </div>

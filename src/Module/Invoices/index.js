@@ -3,12 +3,10 @@ import SideNav from "../Common/SideNav";
 import Heading from "../Common/Heading";
 import DataTableComponent from "../Common/DataTableComponent";
 import Loader from "../Common/Loader";
+import DatePicker from "react-date-picker";
 import {
   GetRequest,
-  DeleteRequest,
   closeModalProfile,
-  displayModal,
-  PostRequest,
   PutRequest,
 } from "../ApiHandler/ApiHandler";
 import Modal from "../Common/Modal";
@@ -20,14 +18,47 @@ const Invoices = () => {
   const [modalLoading, setModalLoading] = useState(false);
   const [complainId, setComplainId] = useState(false);
   const [currentStatus, setCurrentStatus] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  console.log(startDate, endDate);
+  const formatDate = (date, { utc = false } = {}) => {
+    if (typeof date === "string") date = new Date(date);
+    if (date) {
+      const options = {};
+      if (utc) options.timeZone = "UTC";
+      const formatedDate = new Intl.DateTimeFormat().format(date);
+      return formatedDate;
+    }
+    return "";
+  };
 
   useEffect(() => {
     fetchPosts();
-  }, []);
-
+  }, [startDate, endDate]);
+  const getFormatedDateForInvoices = (date) => {
+    if (!date) {
+      return undefined;
+    }
+    const today = new Date(date);
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    const day = today.getDate();
+    return `${year}-${month}-${day}`;
+  };
   async function fetchPosts() {
+    let url = `getallinvoice?`;
     setLoading(true);
-    let res = await GetRequest("getComplain/all");
+    if (startDate) {
+      url += `startDate=${getFormatedDateForInvoices(startDate)}`;
+    }
+    if (endDate) {
+      if (!startDate) {
+        url += `endDate=${getFormatedDateForInvoices(endDate)}`;
+      } else {
+        url += `&endDate=${getFormatedDateForInvoices(endDate)}`;
+      }
+    }
+    let res = await GetRequest(url);
     if (res.status === 200) {
       setData(res.data);
     } else {
@@ -41,6 +72,7 @@ const Invoices = () => {
       selector: "",
       sortable: true,
       maxWidth: "100px",
+      minWidth: "80px",
       cell: (row, index) => index + 1,
     },
     {
@@ -50,64 +82,52 @@ const Invoices = () => {
       cell: (row) => (row["userName"] === "" ? "NA" : row["userName"]),
     },
     {
-      name: "Candidate name",
-      selector: "candidateName",
+      name: "User email",
+      selector: "userEmail",
       sortable: true,
-      cell: (row) =>
-        row["candidateName"] === "" ? "NA" : row["candidateName"],
+      cell: (row) => (row["userEmail"] === "" ? "NA" : row["userEmail"]),
     },
     {
-      name: "Report Detail",
-      selector: "reportdetail",
+      name: "Invoice number",
+      selector: "invoiceId",
       sortable: true,
-      cell: (row) => (row["reportdetail"] === "" ? "NA" : row["reportdetail"]),
+      cell: (row) => (row["invoiceId"] === "" ? "NA" : row["invoiceId"]),
     },
     {
-      name: "Report Status",
-      selector: "reportstatus",
+      name: "Date",
+      selector: "date",
       sortable: true,
-      cell: (row) =>
-        row["reportstatus"] === "" ? "NA" : row["reportstatus"].toUpperCase(),
+      cell: (row) => (row["date"] === "" ? "NA" : formatDate(row["date"])),
     },
     {
-      name: "",
-      selector: "",
-      cell: (row) => (
-        <>
-          {row["reportstatus"] === "pending" && (
-            <button
-              onClick={() => {
-                setComplainId(row["_id"]) ||
-                  setCurrentStatus("rejected") ||
-                  displayModal("complainModal");
-              }}
-              className=" btn btn-grad "
-            >
-              Reject
-            </button>
-          )}
-        </>
-      ),
+      name: "Plan name",
+      selector: "planName",
+      sortable: true,
+      cell: (row) => (row["planName"] === "" ? "NA" : row["planName"]),
     },
     {
-      name: "",
-      selector: "",
-      cell: (row) => (
-        <>
-          {row["reportstatus"] === "pending" && (
-            <button
-              onClick={() => {
-                setComplainId(row["_id"]) ||
-                  setCurrentStatus("accepted") ||
-                  displayModal("complainModal");
-              }}
-              className=" btn btn-grad "
-            >
-              Accept
-            </button>
-          )}
-        </>
-      ),
+      name: "CGST",
+      selector: "CGST",
+      sortable: true,
+      maxWidth: "100px",
+      minWidth: "80px",
+      cell: (row) => (row["CGST"] === "" ? "NA" : row["CGST"]),
+    },
+    {
+      name: "SGST",
+      selector: "SGST",
+      sortable: true,
+      maxWidth: "100px",
+      minWidth: "80px",
+      cell: (row) => (row["SGST"] === "" ? "NA" : row["SGST"]),
+    },
+    {
+      name: "Price",
+      selector: "total",
+      sortable: true,
+      maxWidth: "100px",
+      minWidth: "80px",
+      cell: (row) => (row["total"] === "" ? "NA" : row["total"]),
     },
   ];
 
@@ -146,7 +166,20 @@ const Invoices = () => {
       </div>
       <div className="content-inner">
         <div className="container-fluid bgBlue">
-          <Heading headingText="User Reports" buttonComponent="" />
+          <div className="d-flex justify-content-between px-3 mb-2">
+            <Heading headingText="Invoices" buttonComponent="" />
+            <div className="d-flex align-items-center justify-content-end">
+              <div className="mr-2">
+                <h5 className="page-header-title mr-2">Start Date</h5>
+                <DatePicker onChange={setStartDate} value={startDate} />
+              </div>
+              <div>
+                <h5 className="page-header-title mr-2">End Date</h5>
+                <DatePicker onChange={setEndDate} value={endDate} />
+              </div>
+            </div>
+          </div>
+
           <div className="row flex-row">
             <div className="col-xl-12">
               <div className="widget has-shadow" id="manageRestaurant">
@@ -158,6 +191,7 @@ const Invoices = () => {
                   ) : (
                     <div style={{ display: "none" }}></div>
                   )}
+
                   <DataTableComponent columns={columns} data={data} />
                   <Modal
                     modalId="UserDeletePopup"

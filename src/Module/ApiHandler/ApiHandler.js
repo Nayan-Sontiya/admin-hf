@@ -1,6 +1,5 @@
 const serverUrl = "https://hospitalityfinder.in/api/";
-// const serverUrl =
-//   "https://20d4-2409-4043-4c11-77d0-3174-7c92-3383-c613.in.ngrok.io/api/";
+// const serverUrl = "https://317f-223-236-32-43.in.ngrok.io/api/";
 const awsurl = "https://hospitality-web.s3.us-east-2.amazonaws.com/";
 
 let AccessTokenProvider = () => {

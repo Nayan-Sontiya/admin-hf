@@ -118,10 +118,10 @@ const Registration = () => {
     setExpCity(expDetailsData.expCity);
     setExpStartDate(expDetailsData.expStartDate);
     setExpEndDate(expDetailsData.expEndDate);
-    setExpStartMonth(expDetailsData.expStartMonth);
-    setExpStartYear(expDetailsData.expStartYear);
-    setExpEndMonth(expDetailsData.expEndMonth);
-    setExpEndYear(expDetailsData.expEndYear);
+    setExpStartMonth(expDetailsData?.expStartDate?.split("-")[0]);
+    setExpStartYear(expDetailsData?.expStartDate?.split("-")[1]);
+    setExpEndMonth(expDetailsData?.expEndDate?.split("-")[0]);
+    setExpEndYear(expDetailsData?.expEndDate?.split("-")[1]);
   }, [expDetailsData]);
   useEffect(() => {
     if (expPlace === "INDIA") {
@@ -133,7 +133,6 @@ const Registration = () => {
 
   const submitExp = (e) => {
     e.preventDefault();
-
 
     if (!expDesignation || !expCity || !expPlace) {
       swal({
@@ -158,26 +157,25 @@ const Registration = () => {
           ? new Date().getMonth() + "-" + new Date().getFullYear()
           : expEndMonth + "-" + expEndYear
         : "";
-console.log("121 ",new Date("01-"+experiencesDetails.expStartDate));
-console.log("122 ",new Date("01-"+experiencesDetails.expEndDate) );
-if(new Date("01-"+experiencesDetails.expStartDate) > new Date()){
-  swal({
-    title: "Error",
-    text: "Start date can not be more than current date",
-    icon: "error",
-    buttons: "Ok",
-  });
-  return false
-}
-if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
-  swal({
-    title: "Error",
-    text: "Start date can not be less than current date ",
-    icon: "error",
-    buttons: "Ok",
-  });
-  return false
-}
+
+    if (new Date("01-" + experiencesDetails.expStartDate) > new Date()) {
+      swal({
+        title: "Error",
+        text: "Start date can not be more than current date",
+        icon: "error",
+        buttons: "Ok",
+      });
+      return false;
+    }
+    if (new Date("01-" + experiencesDetails.expEndDate) > new Date()) {
+      swal({
+        title: "Error",
+        text: "Start date can not be less than current date ",
+        icon: "error",
+        buttons: "Ok",
+      });
+      return false;
+    }
     if (
       !expStartMonth ||
       !expStartYear ||
@@ -522,7 +520,61 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
   useEffect(() => {
     emailFormateValidation(email_address);
   }, [email_address]);
-
+  useEffect(() => {
+    if (name_of_candidate) {
+      document.getElementById("name").style.border = "";
+    }
+    if (dob) {
+      document.getElementById("dob").style.border = "";
+    }
+    if (age) {
+      document.getElementById("age").style.border = "";
+    }
+    if (languages) {
+      document.getElementById("languages").style.border = "";
+    }
+    if (category?.length) {
+      document.getElementById("Category").style.border = "";
+    }
+    if (type_of_employement) {
+      document.getElementById("employemntType").style.border = "";
+    }
+    if (sub_category) {
+      document.getElementById("subCategory").style.border = "";
+    }
+    if (permanent_address) {
+      document.getElementById("permanentAddress").style.border = "";
+    }
+    if (contactno1) {
+      document.getElementById("contact1").style.border = "";
+    }
+    if (relative_contact_no) {
+      document.getElementById("relativePhone").style.border = "";
+    }
+    if (education) {
+      document.getElementById("education").style.border = "";
+    }
+    if (religion) {
+      document.getElementById("religion").style.border = "";
+    }
+    if (marital_status) {
+      document.getElementById("maritalStatue").style.border = "";
+    }
+  }, [
+    marital_status,
+    religion,
+    education,
+    relative_contact_no,
+    contactno1,
+    name_of_candidate,
+    dob,
+    age,
+    languages,
+    category,
+    type_of_employement,
+    sub_category,
+    permanent_address,
+  ]);
   const validateIfFieldEmpty = () => {
     if (
       category === "" ||
@@ -602,7 +654,6 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
       if (sub_category === "") {
         document.getElementById("subCategory").style.border = "1px solid red";
       }
-
       if (permanent_address === "") {
         document.getElementById("permanentAddress").style.border =
           "1px solid red";
@@ -613,7 +664,6 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
           buttons: "Ok",
         });
       }
-
       if (contactno1 === "") {
         document.getElementById("contact1").style.border = "1px solid red";
         swal({
@@ -623,7 +673,6 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
           buttons: "Ok",
         });
       }
-
       if (relative_contact_no === "") {
         document.getElementById("relativePhone").style.border = "1px solid red";
         swal({
@@ -633,7 +682,6 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
           buttons: "Ok",
         });
       }
-
       if (education === "") {
         document.getElementById("education").style.border = "1px solid red";
         swal({
@@ -670,25 +718,46 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
         });
       }
     } else {
-      if (age >= 18) {
-        if (emailFormateValidation(email_address) === true) {
-          displayModal("previewRegistration");
-          // registration();
+      if (!(contactno1?.length >= 10 && contactno1?.length <= 15)) {
+        document.getElementById("contact1").style.border = "1px solid red";
+        swal({
+          title: "",
+          text: "Please enter valid contact number",
+          icon: "info",
+          buttons: "Ok",
+        });
+      } else if (
+        !(relative_contact_no?.length >= 10 &&
+        relative_contact_no?.length <= 15)
+      ) {
+        document.getElementById("relativePhone").style.border = "1px solid red";
+        swal({
+          title: "",
+          text: "Please enter valid contact number",
+          icon: "info",
+          buttons: "Ok",
+        });
+      } else {
+        if (age >= 18) {
+          if (emailFormateValidation(email_address) === true) {
+            displayModal("previewRegistration");
+            // registration();
+          } else {
+            swal({
+              title: "",
+              text: "Email is invalid!",
+              icon: "error",
+              buttons: "Ok",
+            });
+          }
         } else {
           swal({
-            title: "",
-            text: "Email is invalid!",
-            icon: "error",
+            title: "Error",
+            text: "Candidate's age can not be less then 18 years!",
+            icon: "Error",
             buttons: "Ok",
           });
         }
-      } else {
-        swal({
-          title: "Error",
-          text: "Candidate's age can not be less then 18 years!",
-          icon: "Error",
-          buttons: "Ok",
-        });
       }
     }
   };
@@ -793,7 +862,6 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
           alt="Exclusive photo platform"
           src={media}
           key={index}
-          autoPlay
           controls
           className="previewImage"
         />
@@ -805,12 +873,7 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
       (el) => el.name?.toLowerCase().indexOf(search?.toLowerCase()) !== -1
     );
   };
-  const suggestions = [
-    { email: "nayan" },
-    { email: "nayan2" },
-    { email: "nayan3" },
-    { email: "ravi" },
-  ];
+
   return (
     <div className="page-content d-flex align-items-stretch">
       <div className="default-sidebar">
@@ -944,7 +1007,8 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
                               type="text"
                               className="form-control"
                               id="contact1"
-                              maxLength="10"
+                              maxLength="15"
+                              minLength="10"
                               onInput={(e) =>
                                 (e.target.value = e.target.value
                                   .replace(/[^0-9.]/g, "")
@@ -963,7 +1027,8 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
                             <input
                               type="text"
                               className="form-control"
-                              maxLength="10"
+                              maxLength="15"
+                              minLength="10"
                               onInput={(e) =>
                                 (e.target.value = e.target.value
                                   .replace(/[^0-9.]/g, "")
@@ -982,7 +1047,8 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
                             <input
                               type="text"
                               id="relativePhone"
-                              maxLength="10"
+                              maxLength="15"
+                              minLength="10"
                               className="form-control"
                               onInput={(e) =>
                                 (e.target.value = e.target.value
@@ -1328,6 +1394,7 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
                             </div>
                           </div>
                         </div>
+
                         <div className="form-group row mt-4">
                           <label className="col-sm-4 col-form-label text-dark text-md-right">
                             Candidate Video
@@ -1729,7 +1796,7 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
                             <label className="col-sm-4 col-form-label mt-2 text-dark text-md-right">
                               City
                             </label>
-                            {expPlace==="INDIA" ? (
+                            {expPlace === "INDIA" ? (
                               <div className="col-sm-7 mt-2 position-relative">
                                 <input
                                   type="text"
@@ -2319,6 +2386,15 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
                           </div>
                           <div className="row p-0 m-0">
                             <div className="col-5 p-0 m-0 text-right">
+                              <label className=""> Employement type :</label>
+                            </div>
+                            <div className="col-7 p-0 m-0">
+                              <p className="pl-2 ">{type_of_employement}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="row p-0 m-0">
+                            <div className="col-5 p-0 m-0 text-right">
                               <label className=""> Salary Expectation :</label>
                             </div>
                             <div className="col-7 p-0 m-0">
@@ -2366,6 +2442,15 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
 
                             <div className="col-7 p-0 m-0">
                               <p className="pl-2 ">{identification}</p>
+                            </div>
+                          </div>
+                          <div className="row p-0 m-0">
+                            <div className="col-5 p-0 m-0 text-right">
+                              <label className="">Category :</label>
+                            </div>
+
+                            <div className="col-7 p-0 m-0">
+                              <p className="pl-2 ">{category.toString()}</p>
                             </div>
                           </div>
                           <div className="row p-0 m-0">
@@ -2455,38 +2540,46 @@ if(new Date("01-"+experiencesDetails.expEndDate) > new Date()){
                                 );
                               })
                             : ""}
-                          <div className="pt-3 pb-3">
-                            <label className="expDetailsText">
-                              Candidate Photograph
-                            </label>
-                            <div id="preview">
-                              {renderMedia(profilePreview)}
+                          {!!profilePreview?.length && (
+                            <div className="pt-3 pb-3">
+                              <label className="expDetailsText">
+                                Candidate Photograph
+                              </label>
+                              <div id="preview">
+                                {renderMedia(profilePreview)}
+                              </div>
                             </div>
-                          </div>
-                          <div className="pt-3 pb-3">
-                            <label className="expDetailsText">
-                              Candidate Video
-                            </label>
-                            <div id="preview">
-                              {renderVideoMedia(videoProfile)}
+                          )}
+                          {!!videoProfile?.length && (
+                            <div className="pt-3 pb-3">
+                              <label className="expDetailsText">
+                                Candidate Video
+                              </label>
+                              <div id="preview">
+                                {renderVideoMedia(videoProfile)}
+                              </div>
                             </div>
-                          </div>
-                          <div className="pt-3 pb-3">
-                            <label className="expDetailsText">
-                              Candidate Certificate
-                            </label>
-                            <div id="preview">
-                              {renderMedia(certificatePreview)}
+                          )}
+                          {!!certificatePreview?.length && (
+                            <div className="pt-3 pb-3">
+                              <label className="expDetailsText">
+                                Candidate Certificate
+                              </label>
+                              <div id="preview">
+                                {renderMedia(certificatePreview)}
+                              </div>
                             </div>
-                          </div>{" "}
-                          <div className="pt-3 pb-3">
-                            <label className="expDetailsText">
-                              Dish Photos
-                            </label>
-                            <div id="preview">
-                              {renderMedia(mediaForPreviewApp)}
+                          )}
+                          {!!mediaForPreviewApp?.length && (
+                            <div className="pt-3 pb-3">
+                              <label className="expDetailsText">
+                                Dish Photos
+                              </label>
+                              <div id="preview">
+                                {renderMedia(mediaForPreviewApp)}
+                              </div>
                             </div>
-                          </div>
+                          )}
                         </div>
                       </div>
                     }
