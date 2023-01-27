@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import SideNav from "../Common/SideNav";
 import Heading from "../Common/Heading";
 import { GetRequest } from "./../ApiHandler/ApiHandler";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Loader from "../Common/Loader";
 const ViewSingleUser = () => {
   let urlData = useLocation();
@@ -41,6 +41,7 @@ const ViewSingleUser = () => {
     state,
     package_purchase_limit,
     outlet_name,
+    resumes,
   } = data || {};
   return (
     <div className="page-content d-flex align-items-stretch">
@@ -57,7 +58,6 @@ const ViewSingleUser = () => {
                   <div style={{ minHeight: "300px" }}>
                     <h5 className="pl-4 pt-4">View User Detail</h5>
                     <hr />
-
                     {loading ? (
                       <div className="loader">
                         <Loader size={40} className="loader" color="#5d5386" />
@@ -116,6 +116,34 @@ const ViewSingleUser = () => {
                               <p className="form-control text-capitalize border-0 bg-white">
                                 {state ? state : "NA"}
                               </p>
+                            </div>
+                          </div>
+                          <div className="form-group row mt-4">
+                            <label className="col-sm-5 col-form-label text-dark text-md-right font-weight-bold">
+                              Resume Views:
+                            </label>
+                            <div className="col-sm-7">
+                              {resumes?.length
+                                ? 
+                                resumes.map((resume, index) => (
+                                    <p className="form-control text-capitalize border-0 bg-white">
+                                      <Link
+                                        to={{
+                                          pathname:
+                                            "/view-individual-registration",
+                                          state: {
+                                            id: resume?.candidateId,
+                                          },
+                                        }}
+                                        className="mr-3"
+                                      >
+                                        {" "}
+                                        {index + 1}.{" "}
+                                        {resume?.candidateName ?? "NA"}
+                                      </Link>
+                                    </p>
+                                  ))
+                                : "NA"}
                             </div>
                           </div>
                         </div>
