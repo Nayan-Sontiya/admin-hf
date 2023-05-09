@@ -295,6 +295,8 @@ const Registration = () => {
     data.append("languages", languages);
     data.append("objective", objective);
     data.append("abroad", experienceAbroad);
+    data.append("candidate_registration_status", "approved");
+
     [...location_of_work].forEach((locationDetails) => {
       data.append("location_of_work", locationDetails);
     });
@@ -727,8 +729,9 @@ const Registration = () => {
           buttons: "Ok",
         });
       } else if (
-        !(relative_contact_no?.length >= 10 &&
-        relative_contact_no?.length <= 15)
+        !(
+          relative_contact_no?.length >= 10 && relative_contact_no?.length <= 15
+        )
       ) {
         document.getElementById("relativePhone").style.border = "1px solid red";
         swal({
@@ -2392,7 +2395,7 @@ const Registration = () => {
                               <p className="pl-2 ">{type_of_employement}</p>
                             </div>
                           </div>
-                          
+
                           <div className="row p-0 m-0">
                             <div className="col-5 p-0 m-0 text-right">
                               <label className=""> Salary Expectation :</label>

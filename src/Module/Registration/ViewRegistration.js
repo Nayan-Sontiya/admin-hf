@@ -24,29 +24,32 @@ const ViewRegistration = () => {
     fetchPosts();
   }, []);
   const updateCandidateStatus = async () => {
-    setStatusLoading(true)
-    const response = await PutRequest(`updatePerformanceCandidate/${candidateId}`, {
-      performance_status:currentStatus,
-    });
+    setStatusLoading(true);
+    const response = await PutRequest(
+      `updatePerformanceCandidate/${candidateId}`,
+      {
+        performance_status: currentStatus,
+      }
+    );
     console.log("response", response);
     if (response.status === 200) {
       swal(response?.message, {
         icon: "success",
-      }).then(()=>{
-        fetchPosts()
-      })
+      }).then(() => {
+        fetchPosts();
+      });
       closeModalProfile("candidateStatusUpdate");
     } else {
       swal(response?.message, {
         icon: "error",
       });
     }
-    setStatusLoading(false)
+    setStatusLoading(false);
   };
 
   async function fetchPosts() {
     setLoading(true);
-    let res = await GetRequest("getCandidatesDetails/");
+    let res = await GetRequest("getCandidatesDetails/approved");
     if (res.length !== undefined && res.length > 0) {
       setData(res.reverse());
     } else {
@@ -234,7 +237,7 @@ const ViewRegistration = () => {
                       <div className="col-9 text-dark pt-2 pb-2">
                         <div className="mb-1 mt-2">
                           <h5 className="page-header-title pt-4">
-                           {` Are you really want to ${currentStatus} candidate?`}
+                            {` Are you really want to ${currentStatus} candidate?`}
                           </h5>
                         </div>
                       </div>

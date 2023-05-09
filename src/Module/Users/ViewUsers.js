@@ -64,20 +64,20 @@ const ViewUsers = () => {
       name: "City",
       selector: "city",
       sortable: true,
-      cell: (row) => (row["city"] === "" ? "NA" : row["city"]),
+      cell: (row) => (!row["city"] ? "NA" : row["city"]),
     },
     {
       name: "Email",
       selector: "email",
       sortable: true,
-      cell: (row) => (row["email"] === "" ? "NA" : row["email"]),
+      cell: (row) => (!row["email"] ? "NA" : row["email"]),
     },
     {
       name: "Contact No 1",
       selector: "contactno1",
       sortable: true,
       cell: (row) =>
-        row["contactno1"] === "" ? "NA" : row["contactno1"].toString(),
+        !row["contactno1"] ? "NA" : row["contactno1"]?.toString(),
     },
     {
       name: "Action",
